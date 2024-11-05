@@ -3,6 +3,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 
 dotenv.config();
+console.log('OPENROUTER_API_KEY:', process.env.OPENROUTER_API_KEY);
+
 
 const app = express();
 
@@ -52,7 +54,7 @@ Make the scenario detailed but concise, around 150-200 words. Ensure the respons
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': req.headers.origin || 'https://tutorsjt.netlify.app',
+        'Referer': req.headers.origin || 'https://tutorsjt.netlify.app',
         'X-Title': 'SJT Test Simulator'
       },
       body: JSON.stringify(requestBody)
