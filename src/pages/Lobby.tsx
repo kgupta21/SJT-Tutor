@@ -14,14 +14,34 @@ export function Lobby() {
     }
   }, [state.showScenarioSuccess]);
 
+  const getApiUrl = () => {
+    // Check if we're in production (Netlify)
+    if (window.location.hostname !== 'localhost') {
+      return 'https://tutorsjt.netlify.app/api/generate-scenario';
+    }
+    // Local development
+    return 'http://localhost:3001/api/generate-scenario';
+  };
+
   const handleRandomizeScenario = async () => {
-    dispatch({ type: 'START_SCENARIO_GENERATION' });
     try {
-      const response = await fetch('http://localhost:3001/api/generate-scenario', {
+      dispatch({ type: 'START_SCENARIO_GENERATION' });
+      const response = await fetch(getApiUrl(), {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
-      if (!response.ok) throw new Error('Failed to generate scenario');
+      
+      if (!response.ok) {
+        console.error('API Response Status:', response.status);
+        const errorText = await response.text();
+        console.error('API Error:', errorText);
+        throw new Error('Failed to generate scenario');
+      }
+      
       const data = await response.json();
+      console.log('Received scenario:', data);
       dispatch({ type: 'SET_SCENARIO', scenario: data });
     } catch (error) {
       console.error('Error generating scenario:', error);

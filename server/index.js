@@ -5,7 +5,20 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+// Configure CORS to allow both local and Netlify domains
+const corsOptions = {
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'https://tutorsjt.netlify.app'
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.post('/api/generate-scenario', async (req, res) => {
@@ -39,7 +52,7 @@ Make the scenario detailed but concise, around 150-200 words. Ensure the respons
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'HTTP-Referer': 'http://localhost:5173',
+        'HTTP-Referer': req.headers.origin || 'https://tutorsjt.netlify.app',
         'X-Title': 'SJT Test Simulator'
       },
       body: JSON.stringify(requestBody)
