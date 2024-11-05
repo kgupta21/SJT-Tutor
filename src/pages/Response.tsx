@@ -4,14 +4,18 @@ import { Scenario } from '../components/Scenario';
 import { useExam } from '../context/ExamContext';
 import { ArrowRight } from 'lucide-react';
 
-const questions = [
-  'What are the immediate steps you would take in this situation?',
-  'How would you balance professional obligations with colleague relationships?',
-  'What long-term measures could prevent similar situations in the future?',
-];
-
 export function Response() {
   const { state, dispatch } = useExam();
+
+  if (!state.scenario) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <p className="text-center text-gray-600">
+          No scenario loaded. Please return to the lobby and generate a scenario.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -23,7 +27,7 @@ export function Response() {
       <Scenario />
 
       <div className="mt-8 space-y-6">
-        {questions.map((question, index) => (
+        {state.scenario.questions.map((question, index) => (
           <div key={index} className="space-y-2">
             <label className="block text-lg font-medium text-gray-700">
               {question}

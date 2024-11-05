@@ -1,12 +1,42 @@
-import React from 'react';
-import { Stethoscope } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Stethoscope, RefreshCw } from 'lucide-react';
 import { useExam } from '../context/ExamContext';
 
 export function Lobby() {
-  const { dispatch } = useExam();
+  const { state, dispatch } = useExam();
+
+  useEffect(() => {
+    if (state.showScenarioSuccess) {
+      const timer = setTimeout(() => {
+        dispatch({ type: 'HIDE_SCENARIO_SUCCESS' });
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [state.showScenarioSuccess]);
+
+  const handleRandomizeScenario = async () => {
+    dispatch({ type: 'START_SCENARIO_GENERATION' });
+    try {
+      const response = await fetch('http://localhost:3001/api/generate-scenario', {
+        method: 'POST',
+      });
+      if (!response.ok) throw new Error('Failed to generate scenario');
+      const data = await response.json();
+      dispatch({ type: 'SET_SCENARIO', scenario: data });
+    } catch (error) {
+      console.error('Error generating scenario:', error);
+      dispatch({ type: 'SCENARIO_GENERATION_ERROR' });
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
+      {state.showScenarioSuccess && (
+        <div className="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">
+          New scenario ready!
+        </div>
+      )}
+      
       <div className="text-center mb-12">
         <div className="flex justify-center mb-6">
           <Stethoscope className="w-16 h-16 text-blue-600" />
@@ -40,12 +70,28 @@ export function Lobby() {
         </div>
       </div>
 
-      <button
-        onClick={() => dispatch({ type: 'START_EXAM' })}
-        className="w-full bg-blue-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors"
-      >
-        Start Exam
-      </button>
+      <div className="flex flex-col space-y-4">
+        <button
+          onClick={handleRandomizeScenario}
+          disabled={state.isGeneratingScenario}
+          className={`w-full bg-green-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 ${
+            state.isGeneratingScenario ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          <RefreshCw className={`w-6 h-6 ${state.isGeneratingScenario ? 'animate-spin' : ''}`} />
+          <span>{state.isGeneratingScenario ? 'Generating...' : 'Randomize Scenario'}</span>
+        </button>
+
+        <button
+          onClick={() => dispatch({ type: 'START_EXAM' })}
+          disabled={!state.scenario}
+          className={`w-full bg-blue-600 text-white py-4 px-8 rounded-lg text-lg font-semibold hover:bg-blue-700 transition-colors ${
+            !state.scenario ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+        >
+          Start Exam
+        </button>
+      </div>
     </div>
   );
 }

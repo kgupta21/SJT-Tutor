@@ -1,9 +1,13 @@
 import React from 'react';
-import { CheckCircle } from 'lucide-react';
+import { CheckCircle, Home } from 'lucide-react';
 import { useExam } from '../context/ExamContext';
 
 export function Results() {
-  const { state } = useExam();
+  const { state, dispatch } = useExam();
+
+  const handleReturnHome = () => {
+    dispatch({ type: 'RESET_EXAM' });
+  };
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
@@ -30,10 +34,17 @@ export function Results() {
       </div>
 
       <div className="mt-8 text-center text-gray-600">
-        <p>
+        <p className="mb-6">
           Coming soon: AI-powered feedback and scoring system to help you improve
           your responses.
         </p>
+        <button
+          onClick={handleReturnHome}
+          className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+        >
+          <Home className="w-5 h-5" />
+          Return to Home
+        </button>
       </div>
     </div>
   );

@@ -1,14 +1,28 @@
 import React from 'react';
-
-const scenarioText = `You are a medical resident working in the emergency department. During your shift, you notice that a colleague appears to be under the influence of alcohol. This colleague is scheduled to perform a critical procedure in the next hour. The attending physician is currently unavailable, and you are the senior resident on duty.
-
-Consider the ethical implications, patient safety concerns, and professional obligations in this situation.`;
+import { useExam } from '../context/ExamContext';
 
 export function Scenario() {
+  const { state } = useExam();
+
+  if (!state.scenario) {
+    return (
+      <div className="bg-white p-6 rounded-lg shadow-md">
+        <p className="text-gray-500 italic">No scenario loaded. Please generate a scenario first.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h2 className="text-xl font-semibold mb-4">Scenario 1</h2>
-      <p className="text-gray-700 leading-relaxed">{scenarioText}</p>
+      <h2 className="text-xl font-semibold mb-4">Medical Ethics Scenario</h2>
+      <p className="text-gray-700 leading-relaxed mb-6">{state.scenario.scenario}</p>
+      
+      <h3 className="text-lg font-semibold mb-3">Questions to Consider:</h3>
+      <ol className="list-decimal list-inside space-y-3">
+        {state.scenario.questions.map((question, index) => (
+          <li key={index} className="text-gray-700">{question}</li>
+        ))}
+      </ol>
     </div>
   );
 }
