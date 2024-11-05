@@ -54,7 +54,7 @@ Make the scenario detailed but concise, around 150-200 words. Ensure the respons
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
-        'Referer': req.headers.origin || 'https://tutorsjt.netlify.app',
+        'HTTP-Referer': req.headers.origin || 'https://tutorsjt.netlify.app',
         'X-Title': 'SJT Test Simulator'
       },
       body: JSON.stringify(requestBody)
