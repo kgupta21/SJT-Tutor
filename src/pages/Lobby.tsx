@@ -12,7 +12,7 @@ export function Lobby() {
           <Stethoscope className="w-16 h-16 text-blue-600" />
         </div>
         <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          CASPer Test Simulator
+          SJT Test Simulator
         </h1>
         <p className="text-xl text-gray-600">
           Prepare for your healthcare admissions journey
