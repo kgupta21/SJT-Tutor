@@ -27,4 +27,5 @@ export type ExamAction =
   | { type: 'SET_SCENARIO'; scenario: Scenario }
   | { type: 'SCENARIO_GENERATION_ERROR' }
   | { type: 'HIDE_SCENARIO_SUCCESS' }
-  | { type: 'RESET_EXAM' };
+  | { type: 'RESET_EXAM' }
+  | { type: 'USE_SAMPLE_SCENARIO' };

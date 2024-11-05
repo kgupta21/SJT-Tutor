@@ -1,6 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react';
 import { ExamState, ExamAction, ExamContextType, Scenario } from '../types';
 
+const sampleScenario: Scenario = {
+  scenario: "Dr. Sarah Chen is a first-year resident working in the Emergency Department when a 45-year-old patient, Mr. Johnson, arrives with severe chest pain. Initial tests suggest a possible heart attack, requiring immediate intervention. However, Mr. Johnson refuses treatment, stating he's a practicing Jehovah's Witness and his religious beliefs prohibit certain medical procedures, including blood transfusions. His condition is rapidly deteriorating, and his wife, who is not of the same faith, is urging the medical team to intervene against his wishes. Dr. Chen knows that without immediate treatment, the patient's chances of survival decrease significantly.",
+  questions: [
+    "How should Dr. Chen balance the patient's religious beliefs with her medical obligation to provide life-saving care?",
+    "What immediate steps should Dr. Chen take to manage this situation while respecting both the patient's autonomy and his wife's concerns?",
+    "How should Dr. Chen document and communicate this situation to protect both the patient's rights and her professional obligations?"
+  ]
+};
+
 const initialState: ExamState = {
   currentPhase: 'lobby',
   responses: ['', '', ''],
@@ -32,6 +41,13 @@ function examReducer(state: ExamState, action: ExamAction): ExamState {
       return {
         ...state,
         scenario: action.scenario,
+        isGeneratingScenario: false,
+        showScenarioSuccess: true,
+      };
+    case 'USE_SAMPLE_SCENARIO':
+      return {
+        ...state,
+        scenario: sampleScenario,
         isGeneratingScenario: false,
         showScenarioSuccess: true,
       };
